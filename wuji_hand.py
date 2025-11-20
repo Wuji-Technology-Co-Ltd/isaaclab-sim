@@ -3,13 +3,16 @@ import isaaclab.sim as sim_utils
 from isaaclab.actuators.actuator_cfg import ImplicitActuatorCfg
 from isaaclab.assets.articulation import ArticulationCfg
 
+current_dir = os.path.dirname(os.path.abspath(__file__))
+aaa =  f"{current_dir}:" + os.environ.get("ROS_PACKAGE_PATH", "")
+
+os.environ["ROS_PACKAGE_PATH"] = aaa
 
 def get_wujihand_config(model_base_dir, hand_side):
     # File paths
     urdf_path = f"{model_base_dir}{hand_side}.urdf"
-    current_dir = os.path.dirname(os.path.abspath(__file__))
     usd_dir = f"{current_dir}/usd"
-    
+
     # PD control gains
     kp = {
         "finger(1|2|3|4|5)_joint(1|2)": 2,
@@ -42,7 +45,7 @@ def get_wujihand_config(model_base_dir, hand_side):
             
             # Collision settings
             collider_type="convex_hull", 
-            self_collision=False,
+            self_collision=True,
             activate_contact_sensors=True,
             
             # Joint control - PD gains for implicit solver

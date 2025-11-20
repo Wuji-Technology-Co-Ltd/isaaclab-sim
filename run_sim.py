@@ -28,7 +28,7 @@ def design_scene():
     
     # Create hand
     prim_utils.create_prim("/World/hand", "Xform")
-    hand_cfg = get_wujihand_config("model/urdf/", side).replace(prim_path="/World/hand/WujiHand")
+    hand_cfg = get_wujihand_config("wujihand-urdf/urdf/", side).replace(prim_path="/World/hand/WujiHand")
     hand = Articulation(cfg=hand_cfg)
     return {"hand": hand}
 
