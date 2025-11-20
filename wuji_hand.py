@@ -1,3 +1,4 @@
+import os
 import isaaclab.sim as sim_utils
 from isaaclab.actuators.actuator_cfg import ImplicitActuatorCfg
 from isaaclab.assets.articulation import ArticulationCfg
@@ -6,7 +7,8 @@ from isaaclab.assets.articulation import ArticulationCfg
 def get_wujihand_config(model_base_dir, hand_side):
     # File paths
     urdf_path = f"{model_base_dir}{hand_side}.urdf"
-    usd_dir = f"{model_base_dir}usd"
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    usd_dir = f"{current_dir}/usd"
     
     # PD control gains
     kp = {
@@ -40,7 +42,7 @@ def get_wujihand_config(model_base_dir, hand_side):
             
             # Collision settings
             collider_type="convex_hull", 
-            self_collision=True,
+            self_collision=False,
             activate_contact_sensors=True,
             
             # Joint control - PD gains for implicit solver
@@ -61,7 +63,7 @@ def get_wujihand_config(model_base_dir, hand_side):
                 max_depenetration_velocity=10.0,
             ),
             articulation_props=sim_utils.ArticulationRootPropertiesCfg(
-                enabled_self_collisions=True,
+                enabled_self_collisions=False,
                 solver_position_iteration_count=20,
                 solver_velocity_iteration_count=10,
             ),

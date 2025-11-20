@@ -14,7 +14,7 @@ from pathlib import Path
 import isaaclab.sim as sim_utils
 from isaaclab.assets import Articulation
 from isaaclab.utils.math import saturate
-from model.wuji_hand import get_wujihand_config
+from wuji_hand import get_wujihand_config
 
 side = "right"
 
@@ -28,7 +28,7 @@ def design_scene():
     
     # Create hand
     prim_utils.create_prim("/World/hand", "Xform")
-    hand_cfg = get_wujihand_config("model/", side).replace(prim_path="/World/hand/WujiHand")
+    hand_cfg = get_wujihand_config("model/urdf/", side).replace(prim_path="/World/hand/WujiHand")
     hand = Articulation(cfg=hand_cfg)
     return {"hand": hand}
 
