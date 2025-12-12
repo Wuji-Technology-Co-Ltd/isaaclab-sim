@@ -22,17 +22,20 @@ from pxr import UsdPhysics
 
 side = "right"
 
+
 def design_scene():
     """Setup scene with WujiHand."""
     # Ground and lighting
     cfg = sim_utils.GroundPlaneCfg()
     cfg.func("/World/ground", cfg)
     cfg = sim_utils.DomeLightCfg(intensity=2000.0)
-    cfg.func("/World/light",cfg)
-    
+    cfg.func("/World/light", cfg)
+
     # Create hand
     prim_utils.create_prim("/World/hand", "Xform")
-    hand_cfg = get_wujihand_config("wujihand-urdf/urdf/", side).replace(prim_path="/World/hand/WujiHand")
+    hand_cfg = get_wujihand_config("wujihand-urdf/urdf/", side).replace(
+        prim_path="/World/hand/WujiHand"
+    )
     hand = Articulation(cfg=hand_cfg)
 
     robot_contact_sensor_cfg = ContactSensorCfg(
@@ -120,12 +123,26 @@ def run_simulator(sim, entities):
 
 def main():
     """Main simulation loop."""
-    sim = sim_utils.SimulationContext(sim_utils.SimulationCfg(dt=1.0/100, device=args_cli.device))
+    sim = sim_utils.SimulationContext(
+        sim_utils.SimulationCfg(dt=1.0 / 100, device=args_cli.device)
+    )
     sim.set_camera_view([3.5, 0.0, 3.2], [0.0, 0.0, 0.5])
     scene_entities = design_scene()
+
+    # Filter collisions between palm and finger link2
+    stage = omni.usd.get_context().get_stage()
+    palm_prim = stage.GetPrimAtPath("/World/hand/WujiHand/palm_link")
+    if palm_prim.IsValid():
+        filtered_api = UsdPhysics.FilteredPairsAPI.Apply(palm_prim)
+        for i in range(1, 6):
+            finger_prim = stage.GetPrimAtPath(f"/World/hand/WujiHand/finger{i}_link2")
+            if finger_prim.IsValid():
+                filtered_api.CreateFilteredPairsRel().AddTarget(finger_prim.GetPath())
+
     sim.reset()
     print("WujiHand simulation running...")
     run_simulator(sim, scene_entities)
+
 
 if __name__ == "__main__":
     main()

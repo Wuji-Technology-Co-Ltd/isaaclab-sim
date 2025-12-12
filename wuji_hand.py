@@ -4,9 +4,10 @@ from isaaclab.actuators.actuator_cfg import ImplicitActuatorCfg
 from isaaclab.assets.articulation import ArticulationCfg
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-aaa =  f"{current_dir}:" + os.environ.get("ROS_PACKAGE_PATH", "")
+os.environ["ROS_PACKAGE_PATH"] = f"{current_dir}:" + os.environ.get(
+    "ROS_PACKAGE_PATH", ""
+)
 
-os.environ["ROS_PACKAGE_PATH"] = aaa
 
 def get_wujihand_config(model_base_dir, hand_side):
     # File paths
@@ -23,11 +24,11 @@ def get_wujihand_config(model_base_dir, hand_side):
         "finger.*_joint(1|2)": 0.05,
         "finger.*_joint(3|4)": 0.03,
     }
-    
+
     # Torque limits for each joint (Nm)
     effort_limits = {
-        "finger(1|2|3|4|5)_joint(1|2)": 3, 
-        "finger(1|2|3|4|5)_joint3": 1.5, 
+        "finger(1|2|3|4|5)_joint(1|2)": 3,
+        "finger(1|2|3|4|5)_joint3": 1.5,
         "finger(1|2|3|4|5)_joint4": 1,
     }
 
@@ -37,21 +38,18 @@ def get_wujihand_config(model_base_dir, hand_side):
             usd_dir=usd_dir,
             usd_file_name="wujihand",
             force_usd_conversion=True,
-            
             # Physics properties
             fix_base=True,
             root_link_name="palm_link",
             link_density=1,
-            
             # Collision settings
-            collider_type="convex_hull", 
+            collider_type="convex_hull",
             self_collision=True,
             activate_contact_sensors=True,
-            
             # Joint control - PD gains for implicit solver
             joint_drive=sim_utils.UrdfConverterCfg.JointDriveCfg(
                 drive_type="force",
-                target_type="position", 
+                target_type="position",
                 gains=sim_utils.UrdfConverterCfg.JointDriveCfg.PDGainsCfg(
                     stiffness=kp,
                     damping=kd,
@@ -66,14 +64,14 @@ def get_wujihand_config(model_base_dir, hand_side):
                 max_depenetration_velocity=10.0,
             ),
             articulation_props=sim_utils.ArticulationRootPropertiesCfg(
-                enabled_self_collisions=False,
+                enabled_self_collisions=True,
                 solver_position_iteration_count=20,
                 solver_velocity_iteration_count=10,
             ),
         ),
         init_state=ArticulationCfg.InitialStateCfg(
             pos=(0.0, 0.0, 0.0),
-            rot=(0.0, 0.0, 0.0, 0.0), 
+            rot=(0.0, 0.0, 0.0, 0.0),
             joint_pos={".*": 0.0},
         ),
         actuators={
