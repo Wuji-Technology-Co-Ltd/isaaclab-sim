@@ -9,7 +9,7 @@ https://github.com/user-attachments/assets/3fffb009-f78a-4dda-93ed-94de20b93811
 
 ## Setup
 ```bash
-git clone --recurse-submodules https://github.com/Wuji-Technology-Co-Ltd/isaaclab-sim.git
+git clone --recurse-submodules https://github.com/wuji-technology/isaaclab-sim.git
 ```
 * Follow the official documentation to set up your environment: 
   https://isaac-sim.github.io/IsaacLab/main/source/setup/installation/index.html
