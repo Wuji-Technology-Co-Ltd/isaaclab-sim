@@ -41,6 +41,7 @@ def get_wujihand_config(model_base_dir, hand_side):
             link_density=1,
             # Collision settings
             collider_type="convex_hull",
+            merge_fixed_joints=False,
             self_collision=True,
             activate_contact_sensors=True,
             # Joint control - PD gains for implicit solver
